@@ -1,6 +1,8 @@
 import pygame
 import math
 import random
+from settings import *
+from sprites import Player
 
 # colors in RGB
 WHITE = (255, 255, 255)
@@ -14,10 +16,7 @@ COLORS = [RED, GREEN, BLUE, BLACK]
 PI = math.pi
 
 # Game Constants
-WIDTH = 1000
-HEIGHT = 800
-SIZE = (WIDTH, HEIGHT)
-FPS = 60
+
 
 ##############################################################################
 ##############################################################################
@@ -31,7 +30,9 @@ clock = pygame.time.Clock()
 
 running = True
 ########################################################################################################################
-
+player = Player(500, 400)
+player_group = pygame.sprite.Group()
+player_group.add(player)
 ########################################################################################################################
 # game loop
 while running:
@@ -41,7 +42,8 @@ while running:
             running = False
 
     screen.fill(WHITE)
-
+    player_group.draw(screen)
+    player_group.update()
     pygame.display.flip()
 
     clock.tick(FPS)
