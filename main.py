@@ -30,7 +30,8 @@ clock = pygame.time.Clock()
 
 running = True
 ########################################################################################################################
-player = Player(500, 400)
+player_img = pygame.image.load('assets/Top_Down_Survivor/handgun/idle/survivor-idle_handgun_0.png')
+player = Player(500, 400, player_img)
 player_group = pygame.sprite.Group()
 player_group.add(player)
 ########################################################################################################################
@@ -43,7 +44,7 @@ while running:
 
     screen.fill(WHITE)
     player_group.draw(screen)
-    player_group.update()
+    player_group.update(player_img)
     pygame.display.flip()
 
     clock.tick(FPS)
