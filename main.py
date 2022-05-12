@@ -30,7 +30,7 @@ clock = pygame.time.Clock()
 
 running = True
 ########################################################################################################################
-player_img = pygame.image.load('assets/Top_Down_Survivor/handgun/idle/survivor-idle_handgun_0.png')
+player_img = pygame.image.load('assets/Top_Down_Survivor/handgun/shoot/survivor-shoot_handgun_0.png')
 player = Player(500, 400, player_img)
 player_group = pygame.sprite.Group()
 player_group.add(player)

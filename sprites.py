@@ -26,6 +26,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def update(self, img):
+        bullet_img = pygame.image.load('assets/bullet.png')
+        bullet_img = pygame.transform.scale(bullet_img, (5, 5))
         keys = pygame.key.get_pressed()
         self.x_velo = 0
         self.y_velo = 0
@@ -47,3 +49,7 @@ class Player(pygame.sprite.Sprite):
             pass
 
 
+class Level:
+    def __init__(self, level_layout, tile_size):
+        self.level_layout = level_layout
+        self.tile_size = tile_size
