@@ -16,11 +16,14 @@ class Player(pygame.sprite.Sprite):
         self.x_velo = 0
         self.y_velo = 0
         self.handgun = True
+        self.bullet_g = pygame.sprite.Group()
+        self.angle = 0
 
     def rotate(self, img):
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        rel_x, rel_y = mouse_x - self.x, mouse_y - self.y
-        angle = (180 / math.pi) * -math.atan2(rel_y, rel_x)
+        rel_x, rel_y = mouse_x - self.rect.x, mouse_y - self.rect.y
+        self.angle = math.atan2(rel_y, rel_x)
+        angle = (180 / math.pi) * -self.angle
         img = pygame.transform.scale(img, (50, 50))
         self.image = pygame.transform.rotozoom(img, angle, 1)
         self.rect = self.image.get_rect(center=self.rect.center)
@@ -42,11 +45,34 @@ class Player(pygame.sprite.Sprite):
 
         if pygame.MOUSEMOTION:
             self.rotate(img)
+
+        if keys[pygame.K_SPACE]:
+            bullet = Bullet(self.rect.centerx, self.rect.centery, bullet_img, self.angle)
+            self.bullet_g.add(bullet)
+
         self.rect.x += self.x_velo
         self.rect.y += self.y_velo
 
-        if keys[pygame.K_SPACE]:
-            pass
+
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, x, y, img, angle):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = img
+        self.rect = self.image.get_rect(x=x, y=y)
+        self.angle = angle
+        self.speed = 6
+
+    def update(self):
+        velo_x = self.speed * math.cos(self.angle)
+        velo_y = self.speed * math.sin(self.angle)
+
+        self.rect.x += velo_x
+        self.rect.y += velo_y
+
+        if self.rect.x > WIDTH or self.rect.x < 0:
+            self.kill()
+        elif self.rect.y > HEIGHT or self.rect.y < 0:
+            self.kill()
 
 
 class Level:
