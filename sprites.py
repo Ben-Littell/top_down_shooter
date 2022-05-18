@@ -18,6 +18,8 @@ class Player(pygame.sprite.Sprite):
         self.handgun = True
         self.bullet_g = pygame.sprite.Group()
         self.angle = 0
+        self.bullet_prev = pygame.time.get_ticks()
+        self.bullet_delay = 200
 
     def rotate(self, img):
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -46,9 +48,12 @@ class Player(pygame.sprite.Sprite):
         if pygame.MOUSEMOTION:
             self.rotate(img)
 
-        if keys[pygame.K_SPACE]:
+        mouse_press = pygame.mouse.get_pressed(3)
+        current_time = pygame.time.get_ticks()
+        if mouse_press[0] and current_time - self.bullet_delay >= self.bullet_prev:
             bullet = Bullet(self.rect.centerx, self.rect.centery, bullet_img, self.angle)
             self.bullet_g.add(bullet)
+            self.bullet_prev = current_time
 
         self.rect.x += self.x_velo
         self.rect.y += self.y_velo
@@ -79,3 +84,30 @@ class Level:
     def __init__(self, level_layout, tile_size):
         self.level_layout = level_layout
         self.tile_size = tile_size
+        self.tile_list = []
+        grass = pygame.image.load('assets/tiles/grass.png')
+        grass = pygame.transform.scale(grass, (tile_size, tile_size))
+        g_b_s_0 = pygame.image.load('assets/tiles/grass-beach0/straight/180/0.png')
+        g_b_s_0 = pygame.transform.scale(g_b_s_0, (tile_size, tile_size))
+
+        for i, row in enumerate(level_layout):
+            for j, col in enumerate(row):
+                x_val = j * tile_size
+                y_val = i * tile_size
+                if col == "1":
+                    img_rect = grass.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    tile = (grass, img_rect)
+                    self.tile_list.append(tile)
+                elif col == '2':
+                    img_rect = g_b_s_0.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    tile = (g_b_s_0, img_rect)
+                    self.tile_list.append(tile)
+
+    def draw(self, screen):
+        for tile in self.tile_list:
+            screen.blit(tile[0], tile[1])
+

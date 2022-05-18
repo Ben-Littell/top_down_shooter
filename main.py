@@ -2,7 +2,7 @@ import pygame
 import math
 import random
 from settings import *
-from sprites import Player
+from sprites import Player, Level
 
 # colors in RGB
 WHITE = (255, 255, 255)
@@ -34,6 +34,8 @@ player_img = pygame.image.load('assets/Top_Down_Survivor/rifle/shoot/survivor-sh
 player = Player(500, 400, player_img)
 player_group = pygame.sprite.Group()
 player_group.add(player)
+tile_test = pygame.image.load('assets/tiles/grass.png')
+level1 = Level(LEVEL_1_back, tile_size)
 ########################################################################################################################
 # game loop
 while running:
@@ -43,6 +45,7 @@ while running:
             running = False
 
     screen.fill(WHITE)
+    level1.draw(screen)
     player_group.draw(screen)
     player_group.update(player_img)
     player.bullet_g.draw(screen)
