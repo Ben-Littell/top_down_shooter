@@ -84,30 +84,94 @@ class Level:
     def __init__(self, level_layout, tile_size):
         self.level_layout = level_layout
         self.tile_size = tile_size
-        self.tile_list = []
+        self.tile_list_back = []
         grass = pygame.image.load('assets/tiles/grass.png')
         grass = pygame.transform.scale(grass, (tile_size, tile_size))
-        g_b_s_0 = pygame.image.load('assets/tiles/grass-beach0/straight/180/0.png')
+        g_b_s_180 = pygame.image.load('assets/tiles/grass-beach0/straight/180/0.png')
+        g_b_s_180 = pygame.transform.scale(g_b_s_180, (tile_size, tile_size))
+        g_b_s_270 = pygame.image.load('assets/tiles/grass-beach0/straight/270/0.png')
+        g_b_s_270 = pygame.transform.scale(g_b_s_270, (tile_size, tile_size))
+        g_b_s_0 = pygame.image.load('assets/tiles/grass-beach0/straight/0/0.png')
         g_b_s_0 = pygame.transform.scale(g_b_s_0, (tile_size, tile_size))
+        g_b_s_90 = pygame.image.load('assets/tiles/grass-beach0/straight/90/0.png')
+        g_b_s_90 = pygame.transform.scale(g_b_s_90, (tile_size, tile_size))
+        g_b_ci_90 = pygame.image.load('assets/tiles/grass-beach0/curve_in/90/0.png')
+        g_b_ci_90 = pygame.transform.scale(g_b_ci_90, (tile_size, tile_size))
+        g_b_ci_0 = pygame.image.load('assets/tiles/grass-beach0/curve_in/0/0.png')
+        g_b_ci_0 = pygame.transform.scale(g_b_ci_0, (tile_size, tile_size))
+        g_b_ci_180 = pygame.image.load('assets/tiles/grass-beach0/curve_in/180/0.png')
+        g_b_ci_180 = pygame.transform.scale(g_b_ci_180, (tile_size, tile_size))
+        g_b_ci_270 = pygame.image.load('assets/tiles/grass-beach0/curve_in/270/0.png')
+        g_b_ci_270 = pygame.transform.scale(g_b_ci_270, (tile_size, tile_size))
+        water = pygame.image.load('assets/tiles/water.png')
+        water = pygame.transform.scale(water, (tile_size, tile_size))
 
         for i, row in enumerate(level_layout):
             for j, col in enumerate(row):
                 x_val = j * tile_size
                 y_val = i * tile_size
-                if col == "1":
+                if col == '0':
+                    img_rect = water.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    tile = (water, img_rect)
+                    self.tile_list_back.append(tile)
+                elif col == "1":
                     img_rect = grass.get_rect()
                     img_rect.x = x_val
                     img_rect.y = y_val
                     tile = (grass, img_rect)
-                    self.tile_list.append(tile)
+                    self.tile_list_back.append(tile)
                 elif col == '2':
+                    img_rect = g_b_s_180.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    tile = (g_b_s_180, img_rect)
+                    self.tile_list_back.append(tile)
+                elif col == '3':
+                    img_rect = g_b_s_270.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    tile = (g_b_s_270, img_rect)
+                    self.tile_list_back.append(tile)
+                elif col == '4':
                     img_rect = g_b_s_0.get_rect()
                     img_rect.x = x_val
                     img_rect.y = y_val
                     tile = (g_b_s_0, img_rect)
-                    self.tile_list.append(tile)
+                    self.tile_list_back.append(tile)
+                elif col == '5':
+                    img_rect = g_b_s_90.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    tile = (g_b_s_90, img_rect)
+                    self.tile_list_back.append(tile)
+                elif col == '6':
+                    img_rect = g_b_ci_90.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    tile = (g_b_ci_90, img_rect)
+                    self.tile_list_back.append(tile)
+                elif col == '7':
+                    img_rect = g_b_ci_0.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    tile = (g_b_ci_0, img_rect)
+                    self.tile_list_back.append(tile)
+                elif col == '8':
+                    img_rect = g_b_ci_180.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    tile = (g_b_ci_180, img_rect)
+                    self.tile_list_back.append(tile)
+                elif col == '9':
+                    img_rect = g_b_ci_270.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    tile = (g_b_ci_270, img_rect)
+                    self.tile_list_back.append(tile)
 
     def draw(self, screen):
-        for tile in self.tile_list:
+        for tile in self.tile_list_back:
             screen.blit(tile[0], tile[1])
 
