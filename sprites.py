@@ -55,6 +55,15 @@ class Player(pygame.sprite.Sprite):
             self.bullet_g.add(bullet)
             self.bullet_prev = current_time
 
+        if self.rect.left + self.x_velo <= 0:
+            self.x_velo = 0
+        elif self.rect.right + self.x_velo >= WIDTH:
+            self.x_velo = 0
+        if self.rect.top + self.y_velo <= 0:
+            self.y_velo = 0
+        elif self.rect.bottom + self.y_velo >= HEIGHT:
+            self.y_velo = 0
+
         self.rect.x += self.x_velo
         self.rect.y += self.y_velo
 
@@ -78,6 +87,17 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
         elif self.rect.y > HEIGHT or self.rect.y < 0:
             self.kill()
+
+
+class Enemies(pygame.sprite.Sprite):
+    def __init__(self, x, y, img_m, img_a, speed):
+        pygame.sprite.Sprite.__init__(self)
+        self.move_imgs = [pygame.transform.scale(img, (50, 50)) for img in img_m]
+        self.attack_imgs = [pygame.transform.scale(img, (50, 50)) for img in img_a]
+        self.image = self.move_imgs[0]
+        self.rect.x = x
+        self.rect.y = y
+        self.speed = speed
 
 
 class Level:

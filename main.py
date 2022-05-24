@@ -31,6 +31,8 @@ clock = pygame.time.Clock()
 running = True
 ########################################################################################################################
 player_img = pygame.image.load('assets/Top_Down_Survivor/rifle/shoot/survivor-shoot_rifle_1.png')
+skeleton_a_imgs = [pygame.image.load(f'assets/top down zombies/skeleton-attack_{val}.png') for val in range(9)]
+skeleton_move_imgs = [pygame.image.load(f'assets/top down zombies/skeleton-move_{val}.png') for val in range(17)]
 player = Player(500, 400, player_img)
 player_group = pygame.sprite.Group()
 player_group.add(player)
