@@ -20,6 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.angle = 0
         self.bullet_prev = pygame.time.get_ticks()
         self.bullet_delay = 200
+        self.health = 200
 
     def rotate(self, img):
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -64,6 +65,9 @@ class Player(pygame.sprite.Sprite):
         elif self.rect.bottom + self.y_velo >= HEIGHT:
             self.y_velo = 0
 
+        if self.health <= 0:
+            self.kill()
+
         self.rect.x += self.x_velo
         self.rect.y += self.y_velo
 
@@ -92,12 +96,62 @@ class Bullet(pygame.sprite.Sprite):
 class Enemies(pygame.sprite.Sprite):
     def __init__(self, x, y, img_m, img_a, speed):
         pygame.sprite.Sprite.__init__(self)
+        self.angle = None
         self.move_imgs = [pygame.transform.scale(img, (50, 50)) for img in img_m]
         self.attack_imgs = [pygame.transform.scale(img, (50, 50)) for img in img_a]
+        self.image_index_m = 0
+        self.image_index_a = 0
         self.image = self.move_imgs[0]
+        self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.speed = speed
+        self.move = True
+        self.attack = False
+        self.rotate_y = True
+        self.prev_time = pygame.time.get_ticks()
+        self.delay = 100
+
+    def rotate(self, img_m, img_a, player_x, player_y):
+        if self.move:
+            rel_x, rel_y = player_x - self.rect.x, player_y - self.rect.y
+            self.angle = math.atan2(rel_y, rel_x)
+            angle = (180 / math.pi) * -self.angle
+            img = pygame.transform.scale(img_m[self.image_index_m], (50, 50))
+            self.image = pygame.transform.rotozoom(img, angle, 1)
+            self.rect = self.image.get_rect(center=self.rect.center)
+        elif self.attack:
+            rel_x, rel_y = player_x - self.rect.x, player_y - self.rect.y
+            self.angle = math.atan2(rel_y, rel_x)
+            angle = (180 / math.pi) * -self.angle
+            img = pygame.transform.scale(img_a[self.image_index_a], (50, 50))
+            self.image = pygame.transform.rotozoom(img, angle, 1)
+            self.rect = self.image.get_rect(center=self.rect.center)
+
+    def update(self, img_m, img_a, player_x, player_y):
+        now = pygame.time.get_ticks()
+        self.rotate(img_m, img_a, player_x, player_y)
+        if self.move:
+            self.speed = 2
+            self.image_index_a = 0
+            if now - self.prev_time >= self.delay:
+                self.image_index_m += 1
+                if self.image_index_m >= len(img_m):
+                    self.image_index_m = 0
+                self.prev_time = now
+        elif self.attack:
+            self.speed = 0
+            self.image_index_m = 0
+            if now - self.prev_time >= self.delay:
+                self.image_index_a += 1
+                if self.image_index_a >= len(img_a):
+                    self.image_index_a = 0
+                self.prev_time = now
+        velo_x = self.speed * math.cos(self.angle)
+        velo_y = self.speed * math.sin(self.angle)
+
+        self.rect.x += velo_x
+        self.rect.y += velo_y
 
 
 class Level:
