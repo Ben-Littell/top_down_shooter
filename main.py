@@ -20,12 +20,96 @@ PI = math.pi
 
 
 ##############################################################################
+def read_hi_score():
+    with open("score.txt", "r") as f:
+        hi_score = f.readline()
+    return hi_score
+
+
+def write_hi_score(score):
+    with open("score.txt", "w") as f:
+        f.write(score)
 ##############################################################################
+
 
 pygame.init()
 
 
+def start_screen():
+    screen = pygame.display.set_mode(SIZE)
+    pygame.display.set_caption('Zombie Survivor')
+    clock = pygame.time.Clock()
+    running = True
+    level = Level(LEVEL_1_back, tile_size)
+    while running:
+        # get all mouse, keyboard, controller events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key is pygame.K_RETURN:
+                    running = False
+
+        screen.fill(BLACK)
+        level.draw(screen)
+        title = arial.render(f'Welcome to Zombie Survivor', True, WHITE)
+        title_rect = title.get_rect()
+        title_rect.center = 300, 20
+        screen.blit(title, title_rect)
+        start = arial.render(f'Press Enter to start', True, WHITE)
+        start_rect = start.get_rect()
+        start_rect.center = 300, 100
+        screen.blit(start, start_rect)
+        pygame.display.flip()
+
+        clock.tick(FPS)
+
+def game_over():
+    screen = pygame.display.set_mode(SIZE)
+    pygame.display.set_caption('Space Invaders')
+    clock = pygame.time.Clock()
+    running = True
+    level = Level(LEVEL_1_back, tile_size)
+    while running:
+        # get all mouse, keyboard, controller events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key is pygame.K_RETURN:
+                    running = False
+                if event.key is pygame.K_q:
+                    quit()
+
+        screen.fill(BLACK)
+        level.draw(screen)
+        game_done = arial.render(f'Game Over', True, WHITE)
+        game_rect = game_done.get_rect()
+        game_rect.center = 300, 20
+        screen.blit(game_done, game_rect)
+        exit_game = arial.render(f'Press Q to Exit', True, WHITE)
+        exit_rect = exit_game.get_rect()
+        exit_rect.center = 300, 100
+        screen.blit(exit_game, exit_rect)
+        restart_game = arial.render(f'Press Enter to Restart', True, WHITE)
+        restart_rect = restart_game.get_rect()
+        restart_rect.center = 300, 180
+        screen.blit(restart_game, restart_rect)
+        with open('score.txt') as file:
+            line = file.readline()
+            score_game = arial.render(f'High Score: {line}', True, WHITE)
+            score_rect = score_game.get_rect()
+            score_rect.center = 300, 260
+            screen.blit(score_game, score_rect)
+        pygame.display.flip()
+
+        clock.tick(FPS)
+
+
 def main():
+    game_over = False
     screen = pygame.display.set_mode(SIZE)
     pygame.display.set_caption('Animation Intro')
 
@@ -90,10 +174,13 @@ def main():
         player.bullet_g.update()
         enemy_group.draw(screen)
         enemy_group.update(skeleton_move_imgs, skeleton_a_imgs, player.rect.x, player.rect.y)
+        score_txt = arial.render(f'Score: {score}', True, WHITE)
+        score_rect = score_txt.get_rect(x=20, y=30)
+        screen.blit(score_txt, score_rect)
 
         enemy_bullet = pygame.sprite.groupcollide(enemy_group, player.bullet_g, True, True)
         if enemy_bullet:
-            score += 5
+            score += 1
         for enemy in enemy_group:
             enemy_player = pygame.sprite.spritecollideany(enemy, player_group,
                                                           collided=pygame.sprite.collide_rect_ratio(.75))
@@ -108,7 +195,7 @@ def main():
                     damage_y = False
                     if player.health <= 0:
                         player.kill()
-                        print(score)
+                        game_over = True
                 elif enemy.image_index_a != 0:
                     damage_y = True
             else:
@@ -124,8 +211,16 @@ def main():
         pygame.display.flip()
 
         clock.tick(FPS)
+        if game_over:
+            high_score = read_hi_score()
+            if score > int(high_score):
+                write_hi_score(str(score))
+            running = False
 
 
 # outside of game loop
-main()
+start_screen()
+while True:
+    main()
+    game_over()
 pygame.quit()
