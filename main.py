@@ -207,6 +207,10 @@ def main():
                         player.health += 4
                         if player.health > 200:
                             player.health = 200
+        if len(enemy_group) >= 195:
+            for enemy in enemy_group:
+                if not enemy.attack:
+                    enemy.speed = 4
 
         pygame.display.flip()
 

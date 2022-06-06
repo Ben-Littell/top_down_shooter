@@ -111,6 +111,7 @@ class Enemies(pygame.sprite.Sprite):
         self.rotate_y = True
         self.prev_time = pygame.time.get_ticks()
         self.delay = 100
+        self.speeds = 2
 
     def rotate(self, img_m, img_a, player_x, player_y):
         if self.move:
@@ -132,7 +133,7 @@ class Enemies(pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
         self.rotate(img_m, img_a, player_x, player_y)
         if self.move:
-            self.speed = 2
+            self.speed = self.speeds
             self.image_index_a = 0
             if now - self.prev_time >= self.delay:
                 self.image_index_m += 1
